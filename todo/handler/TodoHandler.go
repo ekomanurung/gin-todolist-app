@@ -17,13 +17,17 @@ func NewTodoHandler(r *gin.Engine, repository todo.Repository) {
 		Repository: repository,
 	}
 
-	r.GET("/todos", handler.GetAllTodos)
-	r.POST("/todos", handler.AddTodoItem)
-	r.DELETE("/todos/:id", handler.DeleteTodoItem)
+	group := r.Group("/v1")
+	{
+		group.GET("/todos/:id", handler.GetOneTodo)
+		group.GET("/todos", handler.GetAllTodos)
+		group.POST("/todos", handler.AddTodoItem)
+		group.DELETE("/todos/:id", handler.DeleteTodoItem)
+	}
 }
 
 func (t *TodoHandler) AddTodoItem(c *gin.Context) {
-	var todo model.Todo
+	var todo *model.Todo
 
 	if err := c.ShouldBindJSON(&todo); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -62,4 +66,23 @@ func (t *TodoHandler) DeleteTodoItem(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": err.Error(),
 	})
+}
+
+func (t *TodoHandler) GetOneTodo(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	todo, err := t.Repository.GetOne(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, todo)
 }

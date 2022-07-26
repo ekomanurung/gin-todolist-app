@@ -3,8 +3,8 @@ package model
 import "time"
 
 type Todo struct {
-	ID        int       `json:"id"`
-	Title     string    `json:"title"`
-	Author    string    `json:"author"`
-	CreatedAt time.Time `json:"created_at"`
+	ID        int       `db:"id" json:"id"`
+	Title     string    `db:"title" json:"title"`
+	Author    string    `db:"author" json:"author"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
