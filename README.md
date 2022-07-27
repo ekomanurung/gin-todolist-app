@@ -12,6 +12,6 @@ sample todolist microservice using go and mysql
 - execute `docker exec -it todolist-mysql-db` to go inside mysql container
 - after entering the container, run `mysql -u root -p`
 - input password (default should be: root)
-- after that, copy query from `migration/insert_database.sql`
-- copy query from `migration/insert_table_todo.sql`
+- after that, execute query from `migration/insert_database.sql`
+- execute query from `migration/insert_table_todo.sql`
 - done, you can start to use api on `localhost:8080/v1/todos`
