@@ -1,1 +1,1 @@
-create database if not exists todolist
+create database if not exists todolist;
