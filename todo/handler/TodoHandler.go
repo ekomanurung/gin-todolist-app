@@ -31,12 +31,18 @@ func (t *TodoHandler) AddTodoItem(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&todo); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			"error": err,
 		})
 		return
 	}
 
-	result, _ := t.Repository.Save(todo)
+	result, err := t.Repository.Save(todo)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
 
 	c.JSON(http.StatusCreated, result)
 }
