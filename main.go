@@ -15,7 +15,7 @@ func main() {
 
 	//initialize mysql configuration
 	//TODO remove parseTime attribute, since we should define the date time in db in a right way
-	db, sqlErr := sql.Open("mysql", "root:root@/todolist?parseTime=true")
+	db, sqlErr := sql.Open("mysql", "root:root@tcp(mysql:3306)/todolist?parseTime=true")
 	if sqlErr != nil {
 		panic(fmt.Sprintf("Panic when initialize mysql connection caused by: %+v\n", sqlErr.Error()))
 	}
