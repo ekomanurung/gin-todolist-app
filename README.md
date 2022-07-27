@@ -1,5 +1,4 @@
-![example branch parameter](https://github.com/ekomanurung/gin-todolist-app/blob/master/.github/workflows/go.yml/badge.svg?branch=feature-1)
-
+![status](https://github.com/ekomanurung/gin-todolist-app/actions/workflows/go.yml/badge.svg?branch=master)
 # gin-todolist-app
 
 sample todolist microservice using go and mysql
