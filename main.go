@@ -15,7 +15,7 @@ import (
 )
 
 func initializeMysql() *gorm.DB {
-	sourceName := "root:root@tcp(localhost:3306)/todolist?parseTime=true"
+	sourceName := "root:root@tcp(mysql:3306)/todolist?parseTime=true"
 
 	conn, err := sql.Open("mysql", sourceName)
 	if err != nil {
