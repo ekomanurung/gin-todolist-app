@@ -31,7 +31,7 @@ func (t *TodoHandler) AddTodoItem(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&todo); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -39,7 +39,7 @@ func (t *TodoHandler) AddTodoItem(c *gin.Context) {
 	result, err := t.Repository.Save(todo)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -60,18 +60,16 @@ func (t *TodoHandler) DeleteTodoItem(c *gin.Context) {
 		return
 	}
 
-	success, err := t.Repository.Delete(id)
+	err = t.Repository.Delete(id)
 
-	if !success {
-		c.JSON(http.StatusNotFound, gin.H{
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": err.Error(),
-	})
+	c.JSON(http.StatusOK, true)
 }
 
 func (t *TodoHandler) GetOneTodo(c *gin.Context) {

@@ -4,30 +4,46 @@ import (
 	"database/sql"
 	"fmt"
 	"gin-todolist/logger"
+	"gin-todolist/model"
 	"gin-todolist/todo/handler"
 	"gin-todolist/todo/repository"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"time"
 )
 
+func initializeMysql() *gorm.DB {
+	sourceName := "root:root@tcp(localhost:3306)/todolist?parseTime=true"
+
+	conn, err := sql.Open("mysql", sourceName)
+	if err != nil {
+		panic(fmt.Sprintf("Panic when initialize mysql driver connection caused by: %+v\n", err))
+	}
+
+	conn.SetMaxOpenConns(10)
+	conn.SetMaxIdleConns(10)
+	conn.SetConnMaxLifetime(time.Minute * 20)
+
+	db, err := gorm.Open(mysql.New(mysql.Config{Conn: conn}))
+	if err != nil {
+		panic(fmt.Sprintf("Panic when initialize Gorm db caused by: %+v\n", err))
+	}
+
+	//auto migrate table todos
+	db.AutoMigrate(&model.Todo{})
+
+	return db
+}
+
 func main() {
-	r := gin.New()
+	r := gin.Default()
 
 	logger.SetLogLevel(2)
 
-	//initialize mysql configuration
-	//TODO remove parseTime attribute, since we should define the date time in db in a right way
-	db, sqlErr := sql.Open("mysql", "root:root@tcp(mysql:3306)/todolist?parseTime=true")
-	if sqlErr != nil {
-		panic(fmt.Sprintf("Panic when initialize mysql connection caused by: %+v\n", sqlErr.Error()))
-	}
-
-	defer db.Close()
-
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(10)
-	db.SetConnMaxLifetime(time.Minute * 20)
+	//Initialize mysql configuration
+	db := initializeMysql()
 
 	todoRepository := repository.NewMysqlTodoRepository(db)
 	handler.NewTodoHandler(r, todoRepository)
