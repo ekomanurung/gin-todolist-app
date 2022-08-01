@@ -1,21 +1,30 @@
-version: '3.1'
+version: '3.9'
 
 services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: todolist-web-app
+    ports:
+      - '8080:8080'
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PORT: 8080
+      GIN_MODE: release
+    restart: on-failure
   mysql:
     container_name: todolist-mysql-db
     image: mysql:5.7
     ports:
       - '3306:3306'
     environment:
-      MYSQL_HOST: mysql
+      MYSQL_DATABASE: todolist
+      MYSQL_PASSWORD: root
       MYSQL_ROOT_PASSWORD: root
-  web:
-    build: .
-    container_name: todolist-web-app
-    ports:
-      - '8080:8080'
-    depends_on:
-      - mysql
-    environment:
-      PORT: 8080
-      GIN_MODE: release
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'select 1' | mysql -u root -p'root' --silent"]
+      timeout: 10s
+      retries: 5
