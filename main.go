@@ -8,7 +8,6 @@ import (
 	"gin-todolist/todo/handler"
 	"gin-todolist/todo/repository"
 	"github.com/gin-gonic/gin"
-	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"time"
