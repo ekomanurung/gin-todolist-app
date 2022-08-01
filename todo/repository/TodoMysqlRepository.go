@@ -2,22 +2,20 @@ package repository
 
 import (
 	"errors"
-	"gin-todolist/logger"
 	"gin-todolist/model"
 	"gin-todolist/todo"
+	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 	"time"
 )
 
 type TodoMysqlRepository struct {
-	db     *gorm.DB
-	logger *logger.CustomLogger
+	db *gorm.DB
 }
 
 func NewMysqlTodoRepository(sql *gorm.DB) todo.Repository {
 	return &TodoMysqlRepository{
-		db:     sql,
-		logger: logger.GetLoggerInstance(),
+		db: sql,
 	}
 }
 
@@ -26,10 +24,10 @@ func (r *TodoMysqlRepository) Save(todo *model.Todo) (*model.Todo, error) {
 		todo.CreatedAt = time.Now()
 
 		if err := tx.Create(&todo).Error; err != nil {
-			r.logger.Error("Error when save todo %+v. caused by: %+v", todo, err)
+			log.Error().Err(err).Msgf("Error when save todo %+v. caused by: %+v", todo, err)
 			return err
 		}
-		r.logger.Debug("Success insert todo with id : %d", todo.ID)
+		log.Debug().Msgf("Success insert todo with id : %d", todo.ID)
 		return nil
 	})
 
@@ -42,7 +40,7 @@ func (r *TodoMysqlRepository) GetOne(id int) (*model.Todo, error) {
 	result := r.db.First(&item, id)
 
 	if result.Error != nil {
-		r.logger.Error("Failed to fetch todo item with id %d caused by: %+v", id, result.Error)
+		log.Error().Err(result.Error).Msgf("Failed to fetch todo item with id %d caused by: %+v", id, result.Error)
 		return nil, result.Error
 	}
 
@@ -53,7 +51,7 @@ func (r *TodoMysqlRepository) Delete(id int) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
 		res := tx.Delete(&model.Todo{}, id)
 		if res.Error != nil {
-			r.logger.Error("Error when delete todo item with id: %d caused by: %+v", id, res.Error)
+			log.Error().Err(res.Error).Msgf("Error when delete todo item with id: %d caused by: %+v", id, res.Error)
 			return res.Error
 		}
 
@@ -70,7 +68,8 @@ func (r *TodoMysqlRepository) GetAll() []*model.Todo {
 
 	result := r.db.Find(&todos)
 	if result.Error != nil {
-		r.logger.Error("Error when execute Get All Query to database caused by:%+v", result.Error)
+		log.Error().Err(result.Error).Msgf("Error when execute Get All Query to database caused by:%+v", result.Error)
 	}
+
 	return todos
 }

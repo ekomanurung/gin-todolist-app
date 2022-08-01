@@ -3,11 +3,11 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"gin-todolist/logger"
 	"gin-todolist/model"
 	"gin-todolist/todo/handler"
 	"gin-todolist/todo/repository"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"time"
@@ -36,13 +36,19 @@ func initializeMysql() *gorm.DB {
 	return db
 }
 
+func initializeLogger() {
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	zerolog.SetGlobalLevel(zerolog.WarnLevel)
+}
+
 func main() {
 	r := gin.Default()
 
-	logger.SetLogLevel(2)
-
 	//Initialize mysql configuration
 	db := initializeMysql()
+
+	//Initialize Logger
+	initializeLogger()
 
 	todoRepository := repository.NewMysqlTodoRepository(db)
 	handler.NewTodoHandler(r, todoRepository)
