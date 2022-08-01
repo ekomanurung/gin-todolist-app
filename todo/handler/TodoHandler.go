@@ -27,18 +27,16 @@ func NewTodoHandler(r *gin.Engine, repository todo.Repository) {
 }
 
 func (t *TodoHandler) AddTodoItem(c *gin.Context) {
-	var todo *model.Todo
+	var item *model.Todo
 
-	if err := c.ShouldBindJSON(&todo); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+	if err := c.ShouldBindJSON(&item); err != nil {
+		model.ValidateStruct(c, err)
 		return
 	}
 
-	result, err := t.Repository.Save(todo)
+	result, err := t.Repository.Save(item)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -81,12 +79,12 @@ func (t *TodoHandler) GetOneTodo(c *gin.Context) {
 		return
 	}
 
-	todo, err := t.Repository.GetOne(id)
+	item, err := t.Repository.GetOne(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"message": err.Error(),
 		})
 		return
 	}
-	c.JSON(http.StatusOK, todo)
+	c.JSON(http.StatusOK, item)
 }
