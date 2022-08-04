@@ -11,6 +11,9 @@ sample todolist microservice using go and mysql
 - execute command `docker-compose up -d`
 - done, you can start to use api on `localhost:8080/v1/todos`
 
-
-#### ps
-- api docs will be updated later
+#### swagger goland
+- execute this in goland terminal to apply swag command:
+   `export PATH=$(go env GOPATH)/bin:$PATH`
+- changing request/response means you need to run `swag init -g {path-to-controller}/{your-controller}.go`
+  to generate the swagger docs
+- access swagger via `localhost:8080/swagger/index.html`

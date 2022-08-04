@@ -2,10 +2,16 @@ package model
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"net/http"
 )
+
+type Response struct {
+	Code   int      `json:"code" example:"400"`
+	Errors []Errors `json:"errors"`
+}
 
 type Errors struct {
 	Field   string `json:"field"`
@@ -19,13 +25,17 @@ func ValidateStruct(c *gin.Context, err error) {
 		for i, fe := range v {
 			out[i] = Errors{Field: fe.Field(), Message: getErrorMessage(fe)}
 		}
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": out,
+
+		c.JSON(http.StatusBadRequest, Response{
+			Code:   http.StatusBadRequest,
+			Errors: out,
 		})
 	} else {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": err.Error(),
-		})
+		c.JSON(http.StatusBadRequest,
+			Response{
+				Code:   http.StatusBadRequest,
+				Errors: []Errors{{Message: err.Error()}},
+			})
 	}
 }
 
