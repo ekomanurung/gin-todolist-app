@@ -2,11 +2,12 @@ package repository
 
 import (
 	"errors"
+	"time"
+
 	"gin-todolist/model"
 	"gin-todolist/todo"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
-	"time"
 )
 
 type TodoMysqlRepository struct {

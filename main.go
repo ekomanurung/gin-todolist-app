@@ -3,6 +3,9 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"time"
+
+	"gin-todolist/docs"
 	"gin-todolist/model"
 	"gin-todolist/todo/handler"
 	"gin-todolist/todo/repository"
@@ -10,11 +13,13 @@ import (
 	"github.com/rs/zerolog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"time"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func initializeMysql() *gorm.DB {
-	sourceName := "root:root@tcp(mysql:3306)/todolist?parseTime=true"
+	sourceName := "root:root@tcp(localhost:3306)/todolist?parseTime=true"
 
 	conn, err := sql.Open("mysql", sourceName)
 	if err != nil {
@@ -41,8 +46,22 @@ func initializeLogger() {
 	zerolog.SetGlobalLevel(zerolog.WarnLevel)
 }
 
+// @contact.name   API Support
+// @contact.url    http://www.swagger.io/support
+// @contact.email  support@swagger.io
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	r := gin.Default()
+
+	// programmatically set swagger info
+	docs.SwaggerInfo.Title = "Swagger Todolist API"
+	docs.SwaggerInfo.Description = "Go todolist service using swagger"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.BasePath = "/v1"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	//Initialize mysql configuration
 	db := initializeMysql()
@@ -52,6 +71,8 @@ func main() {
 
 	todoRepository := repository.NewMysqlTodoRepository(db)
 	handler.NewTodoHandler(r, todoRepository)
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	err := r.Run(":8080")
 	if err != nil {
