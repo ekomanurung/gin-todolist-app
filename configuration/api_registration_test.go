@@ -6,24 +6,25 @@ import (
 	"gin-todolist/model"
 	"gin-todolist/todo/handler"
 	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 	swaggerFiles "github.com/swaggo/files"
 )
 
 func TestApiRegistration(t *testing.T) {
+	gin.SetMode(gin.ReleaseMode)
+	engine := gin.New()
+
 	t.Run("test todo handler", func(t *testing.T) {
-		ApiRegistration(gin.Default(), &handler.TodoHandler{})
+		ApiRegistration(engine, &handler.TodoHandler{})
 	})
 
 	t.Run("test swagger handler", func(t *testing.T) {
-		ApiRegistration(gin.Default(), swaggerFiles.Handler)
+		ApiRegistration(engine, swaggerFiles.Handler)
 	})
 
 	t.Run("panic - test other handler", func(t *testing.T) {
-		defer func() {
-			if r := recover(); r == nil {
-				t.Errorf("No Panic")
-			}
-		}()
-		ApiRegistration(gin.Default(), &model.Errors{})
+		assert.Panics(t, func() {
+			ApiRegistration(engine, &model.Errors{})
+		})
 	})
 }

@@ -39,6 +39,7 @@ func (d *Database) InitializeConnection(props *DatabaseProperties) {
 	conn.SetMaxIdleConns(props.maxIdleConnection)
 	conn.SetConnMaxLifetime(time.Duration(props.maxLifeTime) * time.Minute)
 
+	//TODO switch case if driver name is not mysql then change configuration
 	db, err := gorm.Open(mysql.New(mysql.Config{Conn: conn}))
 	if err != nil {
 		panic(fmt.Sprintf("Panic when initialize Gorm db caused by: %+v\n", err))
