@@ -14,6 +14,13 @@ services:
     environment:
       PORT: 8080
       GIN_MODE: release
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: todolist
+      DB_DRIVER: mysql
+      APP_LOG_LEVEL: info
     restart: on-failure
   mysql:
     container_name: todolist-mysql-db
