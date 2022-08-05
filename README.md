@@ -1,5 +1,6 @@
 ![status](https://github.com/ekomanurung/gin-todolist-app/actions/workflows/go.yml/badge.svg?branch=master)
-[![codecov](https://codecov.io/gh/ekomanurung/gin-todolist-app/branch/main/graph/badge.svg?token=M6ZflPMpOd)](https://codecov.io/gh/ekomanurung/gin-todolist-app)
+[![codecov](https://codecov.io/gh/ekomanurung/gin-todolist-app/branch/master/graph/badge.svg?token=M6ZflPMpOd)](https://codecov.io/gh/ekomanurung/gin-todolist-app)
+
 # gin-todolist-app
 
 sample todolist microservice using go and mysql
