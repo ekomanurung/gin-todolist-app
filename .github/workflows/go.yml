@@ -25,7 +25,7 @@ jobs:
       run: go test -v ./...
       
     - name: Run coverage
-      run: go test -race -coverprofile=coverage.txt -covermode=atomic
+      run: go test -race -coverprofile=coverage.xml -covermode=atomic
     - name: Codecov
       # You may pin to the exact commit or the version.
       # uses: codecov/codecov-action@81cd2dc8148241f03f5839d295e000b8f761e378
