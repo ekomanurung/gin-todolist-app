@@ -13,17 +13,9 @@ type TodoHandler struct {
 	Repository todo.Repository
 }
 
-func NewTodoHandler(r *gin.Engine, repository todo.Repository) {
-	handler := &TodoHandler{
+func NewTodoHandler(repository todo.Repository) *TodoHandler {
+	return &TodoHandler{
 		Repository: repository,
-	}
-
-	group := r.Group("/v1")
-	{
-		group.GET("/todos/:id", handler.GetOneTodo)
-		group.GET("/todos", handler.GetAllTodos)
-		group.POST("/todos", handler.AddTodoItem)
-		group.DELETE("/todos/:id", handler.DeleteTodoItem)
 	}
 }
 
