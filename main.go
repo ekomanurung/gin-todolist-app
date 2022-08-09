@@ -29,6 +29,8 @@ func main() {
 	configuration.ConfigureLogLevel()
 	configuration.ConfigureDependencies(r)
 
+	fmt.Printf("WANT TO CHECK this")
+
 	err := r.Run(":8080")
 	if err != nil {
 		panic(fmt.Sprintf("Panic when starting the web server caused by: %v\n", err.Error()))
