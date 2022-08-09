@@ -29,7 +29,7 @@ func main() {
 	configuration.ConfigureLogLevel()
 	configuration.ConfigureDependencies(r)
 
-	fmt.Printf("want to modify this again")
+	fmt.Printf("THIS TEST REBASE CODE")
 
 	err := r.Run(":8080")
 	if err != nil {
